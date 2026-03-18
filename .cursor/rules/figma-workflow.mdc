@@ -1,0 +1,26 @@
+---
+description: Workflow Figma → komponent → seed CMS
+alwaysApply: true
+---
+
+# Workflow: Figma → Kod → CMS
+
+## Kroki dla każdego nowego komponentu z Figmy
+
+1. `get_design_context(URL)` → `get_screenshot(URL)` (przez MCP Figma)
+2. Utwórz `components/{Nazwa}/{Nazwa}.tsx` + `{Nazwa}.module.css`
+3. Zastąp wszystkie hardcoded teksty/obrazy: `content['klucz'] || FALLBACK.pole`
+4. Dodaj `INSERT` do `prisma/seed.ts` z `pageId` + `sectionId`
+5. Dodaj klucze do `AGENTS.md` (tabela kluczy CMS)
+
+## Breakpointy
+
+- Mobile: < 768px
+- Tablet: 768px – 1024px
+- Desktop: > 1024px
+
+## Obrazy
+
+- Ścieżki lokalne: `/images/{kategoria}/{nazwa}.webp`
+- Obrazy CMS: wartość klucza `*.image` zawsze zaczyna się od `/`
+- Format: preferuj `.webp`

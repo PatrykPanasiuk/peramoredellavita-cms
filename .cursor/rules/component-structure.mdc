@@ -1,0 +1,43 @@
+---
+description: Struktura komponentów i konwencje CSS
+globs: components/**/*.tsx,app/**/*.tsx
+---
+
+# Struktura komponentów
+
+## Nowy komponent (wzorzec)
+
+```
+components/
+  NazwaKomponentu/
+    NazwaKomponentu.tsx      ← async server component
+    NazwaKomponentu.module.css
+```
+
+## Zasady
+
+- Używaj CSS Modules (`styles.klasa`), nie Tailwind w komponentach frontendowych
+- Tailwind tylko w panelu admina (`app/admin/`)
+- Server components domyślnie – `'use client'` tylko gdy potrzebne (useState, useEffect)
+- Zawsze dodaj fallback z `lib/content.ts`
+- Zmienne CSS: `var(--primary)`, `var(--accent)`, `var(--bg-warm)` itd.
+
+## Wzorzec async server component
+
+```typescript
+import styles from './NazwaKomponentu.module.css';
+import { getContentByPage } from '@/lib/cms-client';
+import { heroContent } from '@/lib/content'; // fallback
+
+export default async function NazwaKomponentu() {
+  const content = await getContentByPage('strona-glowna').catch(() => ({}));
+
+  const title = content['sekcja.title'] || heroContent.title;
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.title}>{title}</h2>
+    </section>
+  );
+}
+```

@@ -1,0 +1,44 @@
+---
+description: Konwencje kluczy CMS i wzorzec czytania treści
+alwaysApply: true
+---
+
+# Konwencje kluczy CMS
+
+Format: `{sekcja}.{pole}` lub `{strona}.{sekcja}.{pole}`
+
+## Przykłady
+- `hero.title` – główny nagłówek
+- `hero.image` – ścieżka obrazu hero (zawsze zaczyna się od `/`)
+- `about.text` – tekst sekcji "O nas"
+- `contact.address` – adres restauracji
+
+## Wzorzec czytania w komponentach (ZAWSZE)
+
+```typescript
+// 1. Pobierz mapę treści dla strony
+const content = await getContentByPage('strona-glowna').catch(() => ({}));
+
+// 2. Użyj z fallbackiem
+const title = content['hero.title'] || heroContent.title;
+const image = content['hero.image'] || heroContent.image;
+```
+
+## Seed – zawsze z page_id i section_id
+
+```typescript
+await prisma.content.upsert({
+  where: { key_locale: { key: 'hero.title', locale: 'pl' } },
+  create: {
+    key: 'hero.title',
+    value: 'Domyślna wartość',
+    type: 'text',
+    locale: 'pl',
+    pageId: homePage.id,       // ZAWSZE
+    sectionId: heroSection.id, // ZAWSZE
+  },
+  update: {},
+});
+```
+
+NIE wstawiaj content z pageId = NULL (floating content nie jest widoczny w panelu).

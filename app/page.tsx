@@ -1,65 +1,166 @@
-import Image from "next/image";
+import { getContentByPage } from '@/lib/cms-client';
+import { heroContent, aboutContent, contactContent } from '@/lib/content';
 
-export default function Home() {
+export default async function HomePage() {
+  const content = await getContentByPage('strona-glowna').catch(() => ({}));
+
+  const hero = {
+    title: content['hero.title'] || heroContent.title,
+    subtitle: content['hero.subtitle'] || heroContent.subtitle,
+    button: content['hero.button'] || heroContent.button,
+    image: content['hero.image'] || heroContent.image,
+  };
+
+  const about = {
+    title: content['about.title'] || aboutContent.title,
+    text: content['about.text'] || aboutContent.text,
+  };
+
+  const contact = {
+    title: content['contact.title'] || contactContent.title,
+    address: content['contact.address'] || contactContent.address,
+    phone: content['contact.phone'] || contactContent.phone,
+    email: content['contact.email'] || contactContent.email,
+    hours: content['contact.hours'] || contactContent.hours,
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main>
+      {/* HERO */}
+      <section
+        id="hero"
+        style={{
+          minHeight: '100vh',
+          background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${hero.image}) center/cover no-repeat`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          color: '#fff',
+          padding: '2rem',
+        }}
+      >
+        <div style={{ maxWidth: '640px' }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', marginBottom: '1.5rem', whiteSpace: 'pre-line', letterSpacing: '0.02em' }}>
+            {hero.title}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p style={{ fontSize: '1.2rem', marginBottom: '2.5rem', opacity: 0.9, lineHeight: 1.6 }}>
+            {hero.subtitle}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#kontakt"
+            style={{
+              display: 'inline-block',
+              padding: '0.9rem 2.5rem',
+              border: '1px solid #c8a96e',
+              color: '#c8a96e',
+              fontSize: '0.95rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              transition: 'all 0.3s',
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            {hero.button}
           </a>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* O NAS */}
+      <section
+        id="o-nas"
+        style={{ padding: '6rem 2rem', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}
+      >
+        <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>
+          {about.title}
+        </h2>
+        <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'var(--text-muted)' }}>
+          {about.text}
+        </p>
+      </section>
+
+      {/* KONTAKT */}
+      <section
+        id="kontakt"
+        style={{ padding: '6rem 2rem', background: 'var(--bg-warm)' }}
+      >
+        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+          <div>
+            <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--primary)' }}>
+              {contact.title}
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)' }}>
+              <p>📍 {contact.address}</p>
+              <p>📞 {contact.phone}</p>
+              <p>✉️ {contact.email}</p>
+              <p>🕐 {contact.hours}</p>
+            </div>
+          </div>
+          <ContactForm />
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ContactForm() {
+  return (
+    <form
+      action="/api/contact"
+      method="POST"
+      style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+    >
+      <h3 style={{ fontSize: '1.3rem', marginBottom: '0.5rem', color: 'var(--primary)' }}>
+        Napisz do nas
+      </h3>
+      {[
+        { name: 'name', label: 'Imię i nazwisko', type: 'text' },
+        { name: 'email', label: 'Adres email', type: 'email' },
+        { name: 'phone', label: 'Telefon (opcjonalnie)', type: 'tel' },
+      ].map((f) => (
+        <div key={f.name} style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+          <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {f.label}
+          </label>
+          <input
+            name={f.name}
+            type={f.type}
+            required={f.name !== 'phone'}
+            style={{
+              padding: '0.75rem 1rem',
+              border: '1px solid var(--border)',
+              background: '#fff',
+              fontSize: '1rem',
+              outline: 'none',
+            }}
+          />
+        </div>
+      ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Wiadomość
+        </label>
+        <textarea
+          name="message"
+          required
+          rows={4}
+          style={{ padding: '0.75rem 1rem', border: '1px solid var(--border)', background: '#fff', fontSize: '1rem', resize: 'vertical', outline: 'none' }}
+        />
+      </div>
+      <button
+        type="submit"
+        style={{
+          padding: '0.9rem',
+          background: 'var(--primary)',
+          color: '#fff',
+          border: 'none',
+          fontSize: '0.95rem',
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          cursor: 'pointer',
+        }}
+      >
+        Wyślij wiadomość
+      </button>
+    </form>
   );
 }
