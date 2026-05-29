@@ -1,5 +1,6 @@
 import { getContentByPage } from '@/lib/cms-client';
 import { heroContent, aboutContent, contactContent } from '@/lib/content';
+import Image from "next/image";
 
 export default async function HomePage() {
   const content = await getContentByPage('strona-glowna').catch(() => ({}));
@@ -99,6 +100,23 @@ export default async function HomePage() {
         </div>
       </section>
     </main>
+    <footer style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)' }}>
+      <p style={{ fontSize: '15px' }}>&copy; {new Date().getFullYear()} Per Amore della Vita. Wszelkie prawa zastrzeżone.</p>
+      <a
+        href="https://suntara.systems"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center opacity-60 hover:opacity-90 transition-opacity"
+      >
+        <Image
+          src="/powered-suntara-white.svg"
+          alt="Suntara Systems"
+          width={110}
+          height={28}
+          className="h-auto"
+        />
+      </a>
+    </footer>
   );
 }
 
